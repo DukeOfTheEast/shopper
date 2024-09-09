@@ -6,6 +6,7 @@ import Image from "next/image";
 import Return from "@/images/return-policy.png";
 import Shipping from "@/images/shipping.png";
 import Warranty from "@/images/warranty.png";
+import StarRating from "@/components/starRating/page";
 
 export default function ProductDetail() {
   const [product, setProduct] = useState(null);
@@ -42,8 +43,7 @@ export default function ProductDetail() {
 
   return (
     <div className="font-serif m-2 sm:mx-20">
-      <h1 className="text-3xl mb-5">{product.title}</h1>
-      <div className="flex flex-col items-center md:flex-row gap-10">
+      <div className="flex flex-col items-center md:flex-row gap-10 mt-10">
         <Image
           src={product.images[0]}
           alt="image"
@@ -52,6 +52,11 @@ export default function ProductDetail() {
           className="bg-slate-100 rounded-xl sm:w-96 sm:h-96"
         />
         <div className="flex flex-col items-start">
+          <h1 className="text-3xl mb-5">{product.title}</h1>
+          <div className="flex items-center gap-3 mb-4">
+            <StarRating rating={product.rating} />
+            <p>({product.reviews.length} reviews)</p>
+          </div>
           <p className="text-xl font-bold">
             &#8358;{Math.ceil(product.price * 1500).toLocaleString()}
           </p>
@@ -69,6 +74,7 @@ export default function ProductDetail() {
             <h1 className="font-bold">Description</h1>
             <p className="">{product.description}</p>
           </div>
+          <div></div>
           <div className="flex gap-2">
             <button className="mt-5 border border-slate-950 rounded-xl p-2 font-semibold">
               Add to Cart
