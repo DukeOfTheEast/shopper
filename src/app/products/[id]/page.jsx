@@ -12,6 +12,8 @@ export default function ProductDetail() {
   const [product, setProduct] = useState(null);
   const [error, setError] = useState(null);
   const params = useParams();
+  const [orderCount, setOrderCount] = useState(1);
+  const [toggleReview, setToggleReview] = useState(true);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -33,6 +35,14 @@ export default function ProductDetail() {
     fetchProduct();
   }, [params.id]);
 
+  const increment = () => {
+    setOrderCount(orderCount + 1);
+  };
+
+  const decrement = () => {
+    setOrderCount(orderCount - 1);
+  };
+
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -40,6 +50,14 @@ export default function ProductDetail() {
   if (!product) {
     return <div>Loading...</div>;
   }
+
+  const description = () => {
+    setToggleReview(true);
+  };
+
+  const review = () => {
+    setToggleReview(false);
+  };
 
   return (
     <div className="font-serif m-2 sm:mx-20">
@@ -74,12 +92,29 @@ export default function ProductDetail() {
             <h1 className="font-bold">Description</h1>
             <p className="">{product.description}</p>
           </div>
-          <div></div>
-          <div className="flex gap-2">
-            <button className="mt-5 border border-slate-950 rounded-xl p-2 font-semibold">
+          <div className="flex flex-row items-center mx-auto sm:mx-1 justify-between gap-x-40 my-3">
+            <p>Quantity</p>
+            <div className=" border border-black rounded-md px-1">
+              <button className="text-xl" onClick={decrement}>
+                -
+              </button>
+              <input
+                type="number"
+                value={orderCount}
+                className="w-10 text-center border-none focus:outline-none"
+                readOnly
+              />
+              <button className="text-xl" onClick={increment}>
+                +
+              </button>
+            </div>
+          </div>
+          <hr className="w-full" />
+          <div className="flex items-center mx-auto sm:mx-1 gap-2">
+            <button className="mt-5 border border-slate-950 rounded-xl p-2 px-5 font-semibold">
               Add to Cart
             </button>
-            <button className="mt-5 border border-slate-950 rounded-xl p-2 font-semibold bg-slate-800 text-white">
+            <button className="mt-5 border border-slate-950 rounded-xl p-2 px-9 font-semibold bg-slate-800 text-white">
               Buy Now
             </button>
           </div>
@@ -107,6 +142,34 @@ export default function ProductDetail() {
         <div className="flex flex-col items-center justify-between">
           <Image src={Return} alt="return" width={150} height={150} />
           <p className="text-xl">{product.returnPolicy}</p>
+        </div>
+      </div>
+      <div>
+        <div className="flex gap-3">
+          <p
+            onClick={description}
+            className={`${
+              toggleReview ? "border-b-amber-950 border-b-4" : ""
+            } cursor-pointer`}
+          >
+            Description
+          </p>
+          <p
+            onClick={review}
+            className={`${
+              !toggleReview ? "border-b-amber-950 border-b-4" : ""
+            } cursor-pointer`}
+          >
+            Reviews
+          </p>
+        </div>
+        <div>
+          <div className={`${toggleReview ? "" : "hidden"}`}>
+            <p>Big descriptions</p>
+          </div>
+          <div className={`${!toggleReview ? "" : "hidden"}`}>
+            <p>My big reviews</p>
+          </div>
         </div>
       </div>
     </div>
