@@ -2,13 +2,20 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function Home() {
+  const router = useRouter();
+  const { page: pageParam, tag: tagParam } = useParams();
   const [productsData, setProductsData] = useState({ products: [] });
   const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(
+    pageParam ? parseInt(pageParam) : 1
+  );
   const [productsPerPage] = useState(12);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTag, setSelectedTag] = useState(tagParam || "");
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -30,24 +37,41 @@ export default function Home() {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    // Update the URL when the currentPage or selectedTag changes
+    router.push(
+      `/?page=${currentPage}${selectedTag ? `&tag=${selectedTag}` : ""}`,
+      undefined,
+      { shallow: true }
+    );
+  }, [currentPage, selectedTag, router]);
+
   if (error) {
     return <div>Error: {error}</div>;
   }
 
-  const totalPages = Math.ceil(productsData.products.length / productsPerPage);
+  const filteredProducts = productsData.products.filter(
+    (product) =>
+      product.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (selectedTag ? product.tags.includes(selectedTag) : true)
+  );
+
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = productsData.products.slice(
+  const currentProducts = filteredProducts.slice(
     indexOfFirstProduct,
     indexOfLastProduct
   );
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const getPageNumbers = () => {
     const pageNumbers = [];
-    const totalPagesToShow = 5; // Adjust this number to show more or fewer page numbers
+    const totalPagesToShow = 5;
 
     let startPage = Math.max(currentPage - Math.floor(totalPagesToShow / 2), 1);
     let endPage = Math.min(startPage + totalPagesToShow - 1, totalPages);
@@ -63,11 +87,62 @@ export default function Home() {
     return pageNumbers;
   };
 
+  const handleTagClick = (tag) => {
+    setSelectedTag(tag);
+    setCurrentPage(1);
+    router.push(`/?page=1&tag=${tag}`, undefined, { shallow: true });
+  };
+
+  const handleClearTag = () => {
+    setSelectedTag("");
+    setCurrentPage(1);
+    router.push(`/?page=1`, undefined, { shallow: true });
+  };
+
   return (
     <div className="font-serif">
       <h1>Products</h1>
+      <div className="items-center mb-4">
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1);
+          }}
+          className="w-full p-2 border rounded"
+        />
+        <div className="ml-4 flex overflow-x-scroll category my-3">
+          <button
+            onClick={handleClearTag}
+            className={`mx-1 px-3 py-1 max-h-10 border rounded mb-3 ${
+              selectedTag === "" ? "bg-black text-white" : "bg-white text-black"
+            }`}
+          >
+            All
+          </button>
+          {[
+            ...new Set(
+              productsData.products.flatMap((product) => product.tags)
+            ),
+          ].map((tag) => (
+            <button
+              key={tag}
+              onClick={() => handleTagClick(tag)}
+              className={`mx-1 px-2 py-1 border max-h-10 whitespace-nowrap mb-3 rounded ${
+                selectedTag === tag
+                  ? "bg-black text-white"
+                  : "bg-white text-black"
+              }`}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+      </div>
       {currentProducts.length === 0 ? (
-        <p>Loading...</p>
+        <p>No products found</p>
       ) : (
         <div className="m-1 mb-10">
           <ul className="flex flex-wrap items-center justify-center gap-10 gap-y-20">
