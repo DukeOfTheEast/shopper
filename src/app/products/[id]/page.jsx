@@ -7,6 +7,8 @@ import Return from "@/images/return-policy.png";
 import Shipping from "@/images/shipping.png";
 import Warranty from "@/images/warranty.png";
 import StarRating from "@/components/starRating/page";
+import { MdAddShoppingCart } from "react-icons/md";
+import LoadingSpinner from "@/components/loadingSpinner/page";
 
 export default function ProductDetail() {
   const [product, setProduct] = useState(null);
@@ -40,7 +42,9 @@ export default function ProductDetail() {
   };
 
   const decrement = () => {
-    setOrderCount(orderCount - 1);
+    if (orderCount >= 2) {
+      setOrderCount(orderCount - 1);
+    }
   };
 
   if (error) {
@@ -48,7 +52,7 @@ export default function ProductDetail() {
   }
 
   if (!product) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   const description = () => {
@@ -58,6 +62,9 @@ export default function ProductDetail() {
   const review = () => {
     setToggleReview(false);
   };
+
+  const date = new Date(product.reviews[0].date);
+  const reviewDate = date.toISOString().slice(0, 10);
 
   return (
     <div className="font-serif m-2 sm:mx-20">
@@ -73,7 +80,7 @@ export default function ProductDetail() {
           <h1 className="text-3xl mb-5">{product.title}</h1>
           <div className="flex items-center gap-3 mb-4">
             <StarRating rating={product.rating} />
-            <p>({product.reviews.length} reviews)</p>
+            <p className="text-slate-500">({product.reviews.length} reviews)</p>
           </div>
           <p className="text-xl font-bold">
             &#8358;{Math.ceil(product.price * 1500).toLocaleString()}
@@ -94,27 +101,31 @@ export default function ProductDetail() {
           </div>
           <div className="flex flex-row items-center mx-auto sm:mx-1 justify-between gap-x-40 my-3">
             <p>Quantity</p>
-            <div className=" border border-black rounded-md px-1">
-              <button className="text-xl" onClick={decrement}>
-                -
-              </button>
-              <input
-                type="number"
-                value={orderCount}
-                className="w-10 text-center border-none focus:outline-none"
-                readOnly
-              />
-              <button className="text-xl" onClick={increment}>
-                +
-              </button>
+            <div>
+              <div className=" border border-black rounded-md px-1">
+                <button className="text-xl" onClick={decrement}>
+                  -
+                </button>
+                <input
+                  type="number"
+                  value={orderCount}
+                  className="w-10 text-center border-none focus:outline-none"
+                  readOnly
+                />
+                <button className="text-xl" onClick={increment}>
+                  +
+                </button>
+              </div>
+              <p className="text-xs my-1">Available: {product.stock}</p>
             </div>
           </div>
           <hr className="w-full" />
           <div className="flex items-center mx-auto sm:mx-1 gap-2">
-            <button className="mt-5 border border-slate-950 rounded-xl p-2 px-5 font-semibold">
+            <button className="mt-5 border border-yellow-400 bg-yellow-400 flex items-center gap-2 rounded-xl text-xs p-2 px-5 font-semibold">
+              <MdAddShoppingCart size={25} />
               Add to Cart
             </button>
-            <button className="mt-5 border border-slate-950 rounded-xl p-2 px-9 font-semibold bg-slate-800 text-white">
+            <button className="mt-5 border border-green-500 rounded-xl p-2 px-9 text-sm font-semibold bg-green-500 text-white">
               Buy Now
             </button>
           </div>
@@ -132,24 +143,42 @@ export default function ProductDetail() {
       </div>
       <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between my-20 sm:mx-14 font-bold gap-14">
         <div className="flex flex-col items-center justify-between">
-          <Image src={Warranty} alt="warranty" width={150} height={150} />
+          <Image
+            src={Warranty}
+            alt="warranty"
+            width={150}
+            height={150}
+            className="bg-green-50 rounded-full p-2"
+          />
           <p className="text-xl">{product.warrantyInformation}</p>
         </div>
         <div className="flex flex-col items-center justify-between">
-          <Image src={Shipping} alt="shipping" width={150} height={150} />
+          <Image
+            src={Shipping}
+            alt="shipping"
+            width={150}
+            height={150}
+            className="bg-green-50 rounded-full p-2"
+          />
           <p className="text-xl">{product.shippingInformation}</p>
         </div>
         <div className="flex flex-col items-center justify-between">
-          <Image src={Return} alt="return" width={150} height={150} />
+          <Image
+            src={Return}
+            alt="return"
+            width={150}
+            height={150}
+            className="bg-green-50 rounded-full p-2"
+          />
           <p className="text-xl">{product.returnPolicy}</p>
         </div>
       </div>
-      <div>
+      <div className="mb-10">
         <div className="flex gap-3">
           <p
             onClick={description}
             className={`${
-              toggleReview ? "border-b-amber-950 border-b-4" : ""
+              toggleReview ? "border-b-green-500 border-b-4" : ""
             } cursor-pointer`}
           >
             Description
@@ -157,18 +186,32 @@ export default function ProductDetail() {
           <p
             onClick={review}
             className={`${
-              !toggleReview ? "border-b-amber-950 border-b-4" : ""
+              !toggleReview ? "border-b-green-500 border-b-4" : ""
             } cursor-pointer`}
           >
-            Reviews
+            Reviews ({product.reviews.length})
           </p>
         </div>
         <div>
           <div className={`${toggleReview ? "" : "hidden"}`}>
-            <p>Big descriptions</p>
+            <p className="my-5">{product.description}</p>
           </div>
-          <div className={`${!toggleReview ? "" : "hidden"}`}>
-            <p>My big reviews</p>
+          <div className={`${!toggleReview ? "" : "hidden"} my-8`}>
+            {product.reviews.map((review) => (
+              <div key={review.id} className="sm:flex sm:gap-20 my-5">
+                <div className="sm:w-40">
+                  <p>{review.reviewerName}</p>
+                  <p>{reviewDate}</p>
+                </div>
+                <div>
+                  <div className="bg-green-50 w-20 p-1 rounded-md">
+                    <StarRating rating={review.rating} />
+                  </div>
+                  <p>{review.comment}</p>
+                  <p className="text-sm">Was this review helpful?</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

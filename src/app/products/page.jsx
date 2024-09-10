@@ -1,5 +1,6 @@
 "use client";
 
+import LoadingSpinner from "@/components/loadingSpinner/page";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
@@ -117,7 +118,9 @@ export default function Home() {
           <button
             onClick={handleClearTag}
             className={`mx-1 px-3 py-1 max-h-10 border rounded mb-3 ${
-              selectedTag === "" ? "bg-black text-white" : "bg-white text-black"
+              selectedTag === ""
+                ? "bg-green-500 text-white"
+                : "bg-white text-black"
             }`}
           >
             All
@@ -132,7 +135,7 @@ export default function Home() {
               onClick={() => handleTagClick(tag)}
               className={`mx-1 px-2 py-1 border max-h-10 whitespace-nowrap mb-3 rounded ${
                 selectedTag === tag
-                  ? "bg-black text-white"
+                  ? "bg-green-500 text-white"
                   : "bg-white text-black"
               }`}
             >
@@ -142,9 +145,9 @@ export default function Home() {
         </div>
       </div>
       {currentProducts.length === 0 ? (
-        <p>No products found</p>
+        <LoadingSpinner />
       ) : (
-        <div className="m-1 mb-10">
+        <div className="m-1 pb-10">
           <ul className="flex flex-wrap items-center justify-center gap-10 gap-y-20">
             {currentProducts.map((product) => (
               <li
@@ -178,7 +181,7 @@ export default function Home() {
                         -{product.discountPercentage}%
                       </p>
                     </div>
-                    <button className="mt-5 border border-slate-950 w-60 rounded-xl p-2 font-semibold group-hover:bg-black group-hover:text-white">
+                    <button className="mt-5 border border-green-500 w-60 rounded-xl p-2 font-semibold group-hover:bg-green-500 group-hover:text-white">
                       Add to Cart
                     </button>
                   </div>
@@ -200,7 +203,7 @@ export default function Home() {
                 onClick={() => paginate(number)}
                 className={`mx-1 px-3 py-1 border rounded ${
                   currentPage === number
-                    ? "bg-black text-white"
+                    ? "bg-green-500 text-white"
                     : "bg-white text-black"
                 }`}
               >
