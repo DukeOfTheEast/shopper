@@ -2,10 +2,19 @@
 
 import React, { useState } from "react";
 // import { Button } from "@/components/ui/button";
-import { ArrowBigLeft, CheckCircle2, Trash2 } from "lucide-react";
+import {
+  ArrowBigLeft,
+  Check,
+  CheckCircle,
+  CheckCircle2,
+  Trash2,
+} from "lucide-react";
 import Image from "next/image";
 import Shipping from "@/images/0xBilly.png";
 import Link from "next/link";
+import MasterCard from "@/images/mastercard.png";
+import Paypal from "@/images/paypal.png";
+import Visa from "@/images/visa.png";
 
 const StepProgressBar = ({ currentStep }) => {
   const steps = ["Cart", "Billing", "Payment"];
@@ -79,11 +88,11 @@ const CartCheckout = () => {
   };
 
   return (
-    <div className="p-4  mx-auto">
+    <div className="p-4 sm:m-7 mx-auto">
       <StepProgressBar currentStep={step} />
 
       {step === 1 && (
-        <div className="sm:flex items-center">
+        <div className="sm:flex items-center gap-5">
           <div>
             <h2 className="text-xl font-bold">Cart</h2>
             <p className="mb-3">(3 items)</p>
@@ -180,64 +189,198 @@ const CartCheckout = () => {
       )}
 
       {step === 2 && (
-        <div>
-          <h2 className="text-xl font-bold mb-2">Billing Information</h2>
-          <input
-            type="text"
-            name="name"
-            value={billingInfo.name}
-            onChange={handleBillingInfoChange}
-            placeholder="Full Name"
-            className="w-full p-2 mb-2 border rounded"
-          />
-          <input
-            type="text"
-            name="address"
-            value={billingInfo.address}
-            onChange={handleBillingInfoChange}
-            placeholder="Address"
-            className="w-full p-2 mb-2 border rounded"
-          />
-          <input
-            type="text"
-            name="city"
-            value={billingInfo.city}
-            onChange={handleBillingInfoChange}
-            placeholder="City"
-            className="w-full p-2 mb-2 border rounded"
-          />
-          <input
-            type="text"
-            name="zipCode"
-            value={billingInfo.zipCode}
-            onChange={handleBillingInfoChange}
-            placeholder="Zip Code"
-            className="w-full p-2 mb-2 border rounded"
-          />
-          <input
-            type="text"
-            name="phoneNumber"
-            value={billingInfo.phoneNumber}
-            onChange={handleBillingInfoChange}
-            placeholder="Phone Number"
-            className="w-full p-2 mb-2 border rounded"
-          />
+        <div className="sm:flex gap-5 sm:mx-20">
+          <div>
+            <h2 className="text-xl font-bold mb-2">Billing Information</h2>
+            <input
+              type="text"
+              name="name"
+              value={billingInfo.name}
+              onChange={handleBillingInfoChange}
+              placeholder="Full Name"
+              className="w-full p-2 mb-2 border rounded focus:outline-none border-lime-500"
+            />
+            <input
+              type="text"
+              name="address"
+              value={billingInfo.address}
+              onChange={handleBillingInfoChange}
+              placeholder="Address"
+              className="w-full p-2 mb-2 border rounded focus:outline-none border-lime-500"
+            />
+            <input
+              type="text"
+              name="city"
+              value={billingInfo.city}
+              onChange={handleBillingInfoChange}
+              placeholder="City"
+              className="w-full p-2 mb-2 border rounded focus:outline-none border-lime-500"
+            />
+            <input
+              type="text"
+              name="zipCode"
+              value={billingInfo.zipCode}
+              onChange={handleBillingInfoChange}
+              placeholder="Zip Code"
+              className="w-full p-2 mb-2 border rounded focus:outline-none border-lime-500"
+            />
+            <input
+              type="text"
+              name="phoneNumber"
+              value={billingInfo.phoneNumber}
+              onChange={handleBillingInfoChange}
+              placeholder="Phone Number"
+              className="w-full p-2 mb-2 border rounded focus:outline-none border-lime-500"
+            />
+          </div>{" "}
+          <div className="shadow-md p-2 rounded-md w-[300px] my-5">
+            <h2 className="font-bold">Order Summary</h2>
+            <div className="flex justify-between my-2">
+              <p>Sub Total</p>
+              <p>&#8358;100</p>
+            </div>
+            <div className="flex justify-between my-3">
+              <p>Discount</p>
+              <p>-</p>
+            </div>
+            <div className="flex justify-between my-3">
+              <p>Shipping</p>
+              <p>-</p>
+            </div>
+            <hr />
+            <div className="flex justify-between my-3">
+              <p>Total</p>
+              <p className="text-orange-300 font-bold">&#8358;1000</p>
+            </div>
+          </div>
         </div>
       )}
 
       {step === 3 && (
-        <div>
-          <h2 className="text-xl font-bold mb-2">Payment</h2>
+        <div className="sm:flex items-center justify-center gap-5">
+          <div>
+            <div className="shadow-md p-4 rounded-lg">
+              <p className="font-bold mb-3">Delivery options</p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="border border-slate-300 rounded-md p-3 font-serif cursor-pointer">
+                  <p>Standard delivery(Free)</p>
+                  <p>Delivered on Monday, October 12</p>
+                </div>
+                <div className="border border-slate-300 rounded-md p-3 font-serif cursor-pointer">
+                  <p>Fast delivery(&#8358;3000)</p>
+                  <p>Delivered on Monday, October 5</p>
+                </div>
+              </div>
+            </div>
+            <div className="shadow-md p-4 rounded-lg">
+              <p className="font-bold mb-3 mt-7">Payment options</p>
+              <div className="flex items-center justify-between border border-slate-300 rounded-md p-3 font-serif cursor-pointer">
+                <div>
+                  <p className="font-bold">Pay with Paypal</p>
+                  <p className="text-xs">
+                    You will be redirected to paypal website to complete your
+                    purchase securely
+                  </p>
+                </div>
+                <Image
+                  src={Paypal}
+                  width={50}
+                  height={50}
+                  alt="paypal"
+                  className="w-8 h-8 ml-3"
+                />
+              </div>
+              <div className="flex border items-center justify-between border-slate-300 rounded-md p-3 font-serif cursor-pointer my-3">
+                <div>
+                  <p className="font-bold">Credit/Debit Card</p>
+                  <p className="text-xs">
+                    We support Mastercard, Visa, Discover and Stripe
+                  </p>
+                </div>
+                <div className="flex">
+                  <Image
+                    src={MasterCard}
+                    width={50}
+                    height={50}
+                    alt="mastercard"
+                    className="w-8 h-8"
+                  />
+                  <Image
+                    src={Visa}
+                    width={50}
+                    height={50}
+                    alt="visa"
+                    className="w-8 h-8"
+                  />
+                </div>
+              </div>
+              <div className="border border-slate-300 rounded-md p-3 font-serif cursor-pointer">
+                <p className="font-bold">Cash on Delivery</p>
+                <p className="text-xs">
+                  Pay with cash when your order is delivered
+                </p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className="shadow-md p-2 rounded-md w-[300px] font-serif mb-10">
+              <p className="font-bold my-3">Address</p>
+              <p className="font-semibold">Ukachukwu Francis</p>
+              <p>39, Duduyemis street, bucknor, ejigbo, Lagos</p>
+              <p>08021226974</p>
+            </div>
+            <div className="shadow-md p-2 rounded-md w-[300px] my-5 font-serif">
+              <h2 className="font-bold">Order Summary</h2>
+              <div className="flex justify-between my-2">
+                <p>Sub Total</p>
+                <p>&#8358;100</p>
+              </div>
+              <div className="flex justify-between my-3">
+                <p>Discount</p>
+                <p>-</p>
+              </div>
+              <div className="flex justify-between my-3">
+                <p>Shipping</p>
+                <p>-</p>
+              </div>
+              <hr />
+              <div className="flex justify-between my-3">
+                <p>Total</p>
+                <p className="text-orange-300 font-bold">&#8358;1000</p>
+              </div>
+            </div>
+            <button
+              onClick={handleProceed}
+              className="bg-green-500 rounded-md text-white w-[300px] py-2 "
+            >
+              Checkout
+            </button>
+          </div>
+          {/* <h2 className="text-xl font-bold mb-2">Payment</h2>
           <p>Total to pay: ${totalPrice.toFixed(2)}</p>
           <button onClick={handlePayment} className="mt-4">
             Process Payment
-          </button>
+          </button> */}
         </div>
       )}
 
-      <div className="mt-4 flex justify-between">
-        {step > 1 && <button onClick={handleBack}>Back</button>}
-        {step === 2 && <button onClick={handleProceed}>Proceed</button>}
+      <div className="mt-4 flex justify-between sm:mx-20">
+        {step > 1 && (
+          <button
+            onClick={handleBack}
+            className="border border-green-500 rounded-md py-1 px-3"
+          >
+            Back
+          </button>
+        )}
+        {step === 2 && (
+          <button
+            onClick={handleProceed}
+            className="rounded-md py-1 px-3 bg-green-500 text-white"
+          >
+            Proceed
+          </button>
+        )}
       </div>
     </div>
   );
