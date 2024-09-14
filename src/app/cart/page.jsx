@@ -2,9 +2,10 @@
 
 import React, { useState } from "react";
 // import { Button } from "@/components/ui/button";
-import { CheckCircle2, Trash2 } from "lucide-react";
+import { ArrowBigLeft, CheckCircle2, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Shipping from "@/images/0xBilly.png";
+import Link from "next/link";
 
 const StepProgressBar = ({ currentStep }) => {
   const steps = ["Cart", "Billing", "Payment"];
@@ -82,14 +83,14 @@ const CartCheckout = () => {
       <StepProgressBar currentStep={step} />
 
       {step === 1 && (
-        <div className="sm:flex">
+        <div className="sm:flex items-center">
           <div>
             <h2 className="text-xl font-bold">Cart</h2>
             <p className="mb-3">(3 items)</p>
             <div className="overflow-x-scroll sm:overflow-x-hidden">
-              <div className="bg-gray-100 p-4 rounded-lg overflow-x-auto min-w-[500px]">
+              <div className="bg-gray-100 p-4 rounded-lg overflow-x-auto min-w-[700px]">
                 <div className="grid grid-cols-6 gap-4 font-bold mb-2 pb-2 border-b">
-                  <div className="col-span-2">Product</div>
+                  <div className="col-span-2 ">Product</div>
                   <div>Price</div>
                   <div>Quantity</div>
                   <div>Total</div>
@@ -108,7 +109,10 @@ const CartCheckout = () => {
                         height={50}
                         className="rounded-lg"
                       />
-                      <div className="">{item.name}</div>
+                      {/* <div className="">{item.name}</div> */}
+                      <div className="">
+                        <p>Eyeshadow Palette with Mirror</p>
+                      </div>
                     </div>
                     <div>&#8358;{item.price.toFixed(2)}</div>
                     <div>{item.quantity}</div>
@@ -123,6 +127,15 @@ const CartCheckout = () => {
                   <div>${totalPrice.toFixed(2)}</div>
                 </div> */}
               </div>
+            </div>
+            <div className="inline-block">
+              <Link
+                href={"/products"}
+                className="text-xs flex items-center my-2 text-green-400"
+              >
+                <ArrowBigLeft size={20} />
+                <p>Continue Shopping</p>
+              </Link>
             </div>
           </div>
           <div className="m-5 flex flex-col items-center justify-center">
