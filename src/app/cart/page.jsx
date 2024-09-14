@@ -257,7 +257,7 @@ const CartCheckout = () => {
       )}
 
       {step === 3 && (
-        <div className="sm:flex items-center justify-center gap-5">
+        <div className="flex sm:flex-row flex-col items-center justify-center gap-5">
           <div>
             <div className="shadow-md p-4 rounded-lg">
               <p className="font-bold mb-3">Delivery options</p>
