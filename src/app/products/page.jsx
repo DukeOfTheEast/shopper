@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import Navbar from "@/components/navbar/page";
 
 export default function Home() {
   const router = useRouter();
@@ -101,9 +102,9 @@ export default function Home() {
   };
 
   return (
-    <div className="font-serif">
-      <h1>Products</h1>
-      <div className="items-center mb-4">
+    <div className="font-serif relative">
+      <Navbar />
+      <div className="items-center mb-4 mt-2">
         <input
           type="text"
           placeholder="Search products..."
@@ -112,7 +113,7 @@ export default function Home() {
             setSearchTerm(e.target.value);
             setCurrentPage(1);
           }}
-          className="w-full p-2 border rounded"
+          className=" sm:w-1/3 px-2 py-1 border rounded-3xl sm:mx-3 mx-1 my-2 focus:outline-none"
         />
         <div className="ml-4 flex overflow-x-scroll category my-3">
           <button
