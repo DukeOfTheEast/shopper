@@ -32,6 +32,8 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [cartCount, setCartCount] = useState(0);
 
+  const count = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
   // Add an item to the cart
   const addToCart = (product) => {
     setCartItems((prevItems) => {
@@ -55,6 +57,8 @@ export const CartProvider = ({ children }) => {
         ];
       }
     });
+
+    setCartCount(count);
   };
 
   // Remove a specific item from the cart
@@ -62,23 +66,27 @@ export const CartProvider = ({ children }) => {
     setCartItems((prevItems) =>
       prevItems.filter((item) => item.id !== productId)
     );
+
+    setCartCount(count);
   };
 
   // Clear all items from the cart
-  const clearCart = () => {
-    setCartItems([]);
-  };
+  // const clearCart = () => {
+  //   setCartItems([]);
+
+  //   setCartCount(count);
+  // };
 
   // Update the cart count whenever the cartItems array changes
-  useEffect(() => {
-    const count = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-    setCartCount(count);
-  }, [cartItems]);
+  // useEffect(() => {
+  // const count = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  // setCartCount(count);
+  // }, [cartItems]);
 
   // Provide the cart state and actions to children
   return (
     <CartContext.Provider
-      value={{ cartItems, cartCount, addToCart, removeFromCart, clearCart }}
+      value={{ cartItems, cartCount, addToCart, removeFromCart }}
     >
       {children}
     </CartContext.Provider>

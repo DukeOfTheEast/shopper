@@ -8,7 +8,7 @@ import { ArrowLeft } from "lucide-react";
 import { useCart } from "@/context/Cart/page";
 
 const CheckoutSuccess = () => {
-  const { clearCart } = useCart();
+  // const { clearCart } = useCart();
 
   return (
     <div className="flex flex-col items-center text-center h-full sm:h-screen py-10 bg-gradient-to-r from-green-100 via-white to-green-100">
@@ -22,10 +22,7 @@ const CheckoutSuccess = () => {
       <p>All the Best</p>
       <div className="flex sm:flex-row flex-col-reverse gap-3 my-8 w-[300px] sm:w-auto">
         <Link href={"/products"}>
-          <button
-            onClick={clearCart()}
-            className="flex items-center justify-center gap-1 rounded-md py-1 px-3 border border-green-500 font-serif w-full sm:w-auto"
-          >
+          <button className="flex items-center justify-center gap-1 rounded-md py-1 px-3 border border-green-500 font-serif w-full sm:w-auto">
             <ArrowLeft size={15} />
             <p>Continue Shopping</p>
           </button>
