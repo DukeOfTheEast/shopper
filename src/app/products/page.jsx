@@ -104,7 +104,7 @@ export default function Home() {
   return (
     <div className="font-serif relative">
       <Navbar />
-      <div className="items-center mb-4 mt-2">
+      <div className="items-center mb-4 mt-20">
         <input
           type="text"
           placeholder="Search products..."

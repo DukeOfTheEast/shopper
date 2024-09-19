@@ -6,12 +6,13 @@ import Image from "next/image";
 import Default from "@/images/default-image.png";
 import Cart from "@/images/cart.png";
 import Link from "next/link";
+import { useCart } from "@/context/Cart/page";
 
 const Navbar = () => {
-  const [cartNumber, setCartNumber] = useState(0);
+  const { cartCount } = useCart();
 
   return (
-    <div className="flex items-center justify-between sm:px-10 px-3 py-4 shadow-md ">
+    <div className="flex items-center justify-between sm:px-10 px-3 py-4 shadow-md fixed top-0 left-0 right-0 bg-white">
       <div className="flex items-center text-orange-300 font-serif">
         <span className="">Sh</span>
         <Image src={Logo} alt="logo" width={30} height={30} />
@@ -26,8 +27,8 @@ const Navbar = () => {
             alt="default"
             className="sm:w-8 w-6 sm:h-8 h-6"
           />
-          <p className="bg-red-600 text-white px-1 absolute sm:ml-5 ml-4 sm:bottom-4 bottom-3 rounded-lg">
-            {cartNumber}
+          <p className="bg-red-600 text-white px-1 absolute sm:ml-5 ml-3 sm:bottom-4 bottom-3 rounded-lg">
+            {cartCount}
           </p>
         </Link>
         <Image
