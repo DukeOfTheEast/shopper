@@ -1,22 +1,5 @@
 "use client";
 
-// import { createContext, useState, useContext } from "react";
-
-// const CartContext = createContext();
-
-// export function useCartState() {
-//   return useContext(CartContext);
-// }
-
-// export function CartProvider({ children }) {
-//   const [cartState, setCartState] = useState(0);
-//   return (
-//     <CartContext.Provider value={{ cartState, setCartState }}>
-//       {children}
-//     </CartContext.Provider>
-//   );
-// }
-
 import React, { createContext, useState, useContext, useEffect } from "react";
 
 // Create the Cart Context

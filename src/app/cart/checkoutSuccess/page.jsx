@@ -5,11 +5,8 @@ import React from "react";
 import Checkout from "@/images/cart-checkout.png";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { useCart } from "@/context/Cart/page";
 
 const CheckoutSuccess = () => {
-  // const { clearCart } = useCart();
-
   return (
     <div className="flex flex-col items-center text-center h-full sm:h-screen py-10 bg-gradient-to-r from-green-100 via-white to-green-100">
       <p className="font-bold">Thank you for your purchase!</p>

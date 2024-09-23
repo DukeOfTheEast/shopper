@@ -105,7 +105,7 @@ const CartCheckout = () => {
           <div className="sm:flex items-center gap-5">
             <div>
               <h2 className="text-xl font-bold">Cart</h2>
-              <p className="mb-3">(3 items)</p>
+              <p className="mb-3">({cartItems.length} items)</p>
               <div className="overflow-x-scroll sm:overflow-x-hidden">
                 <div className="bg-gray-100 p-4 rounded-lg overflow-x-auto min-w-[700px]">
                   <div className="grid grid-cols-6 gap-4 font-bold mb-2 pb-2 border-b">
@@ -395,9 +395,11 @@ const CartCheckout = () => {
             <div>
               <div className="shadow-md p-2 rounded-md w-[300px] font-serif mb-10">
                 <p className="font-bold my-3">Address</p>
-                <p className="font-semibold">Ukachukwu Francis</p>
-                <p>39, Duduyemis street, bucknor, ejigbo, Lagos</p>
-                <p>08021226974</p>
+                <p className="font-semibold">
+                  {billingInfo.name ? billingInfo.name : "-"}
+                </p>
+                <p>{billingInfo.address ? billingInfo.address : "-"}</p>
+                <p>{billingInfo.phoneNumber ? billingInfo.phoneNumber : "-"}</p>
               </div>
               <div className="shadow-md p-2 rounded-md w-[300px] my-5 font-serif">
                 <h2 className="font-bold">Order Summary</h2>

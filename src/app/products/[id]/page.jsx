@@ -11,6 +11,7 @@ import { MdAddShoppingCart } from "react-icons/md";
 import LoadingSpinner from "@/components/loadingSpinner/page";
 import Navbar from "@/components/navbar/page";
 import { useCart } from "@/context/Cart/page";
+import { useRouter } from "next/navigation";
 
 export default function ProductDetail() {
   const { addToCart } = useCart();
@@ -19,6 +20,7 @@ export default function ProductDetail() {
   const params = useParams();
   const [orderCount, setOrderCount] = useState(1);
   const [toggleReview, setToggleReview] = useState(true);
+  const router = useRouter();
   // const { setCartState, cartState } = useCartState();
 
   useEffect(() => {
@@ -140,7 +142,13 @@ export default function ProductDetail() {
                 <MdAddShoppingCart size={25} />
                 Add to Cart
               </button>
-              <button className="mt-5 border border-green-500 rounded-xl p-2 px-9 text-sm font-semibold bg-green-500 text-white">
+              <button
+                onClick={() => {
+                  addToCart(product);
+                  router.push("/cart");
+                }}
+                className="mt-5 border border-green-500 rounded-xl p-2 px-9 text-sm font-semibold bg-green-500 text-white"
+              >
                 Buy Now
               </button>
             </div>
