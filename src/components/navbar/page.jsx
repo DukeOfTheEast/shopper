@@ -79,7 +79,7 @@ const Navbar = () => {
             toggleMenu
               ? "max-h-[9999px] opacity-100 translate-y-0"
               : "max-h-0 opacity-0 -translate-y-4"
-          } mx-auto bg-white p-3 gap-3 shadow-md`}
+          } mx-auto bg-white p-3 py-7 gap-4 shadow-md`}
         >
           <Link href={"/signup"}>
             <button className="w-full mt-5 border border-green-500 rounded-md px-3 py-2 text-green-500 sm:mr-2">
