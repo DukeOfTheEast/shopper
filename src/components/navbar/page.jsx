@@ -19,8 +19,9 @@ const Navbar = () => {
   const { cartCount } = useCart();
   const [toggleMenu, setToggleMenu] = useState(false);
 
-  const ToggleMenu = () => {
+  const handleToggle = () => {
     setToggleMenu(!toggleMenu);
+    console.log(toggleMenu);
   };
 
   return (
@@ -58,9 +59,9 @@ const Navbar = () => {
           </Link>
           <div className="sm:hidden cursor-pointer">
             {toggleMenu ? (
-              <X onClick={ToggleMenu} size={30} />
+              <X onClick={handleToggle} size={30} />
             ) : (
-              <MenuIcon onClick={ToggleMenu} size={30} />
+              <MenuIcon onClick={handleToggle} size={30} />
             )}
           </div>
           {/* <Image
@@ -72,13 +73,13 @@ const Navbar = () => {
         /> */}
         </div>
       </div>
-      <div className="sm:hidden fixed left-0 right-0 top-10 ">
+      <div className="sm:hidden fixed w-full top-12">
         <div
           className={`flex flex-col transition-all duration-500 ${
             toggleMenu
               ? "max-h-[9999px] opacity-100 translate-y-0"
               : "max-h-0 opacity-0 -translate-y-4"
-          } absolute mx-auto bg-white w-full p-3 gap-3 shadow-md`}
+          } mx-auto bg-white p-3 gap-3 shadow-md`}
         >
           <Link href={"/signup"}>
             <button className="w-full mt-5 border border-green-500 rounded-md px-3 py-2 text-green-500 sm:mr-2">
