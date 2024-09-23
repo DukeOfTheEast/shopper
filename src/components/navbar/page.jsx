@@ -58,9 +58,9 @@ const Navbar = () => {
           </Link>
           <div className="sm:hidden cursor-pointer">
             {toggleMenu ? (
-              <X onClick={ToggleMenu} size={25} />
+              <X onClick={ToggleMenu} size={30} />
             ) : (
-              <MenuIcon onClick={ToggleMenu} size={25} />
+              <MenuIcon onClick={ToggleMenu} size={30} />
             )}
           </div>
           {/* <Image
