@@ -81,12 +81,12 @@ const Navbar = () => {
           } absolute mx-auto bg-white w-full p-3 gap-3 shadow-md`}
         >
           <Link href={"/signup"}>
-            <button className="w-full border border-green-500 rounded-md px-3 py-1 text-green-500 sm:mr-2">
+            <button className="w-full border border-green-500 rounded-md px-3 py-2 text-green-500 sm:mr-2">
               Signup
             </button>
           </Link>
           <Link href={"/login"}>
-            <button className="mb-10 w-full bg-green-500 rounded-md px-3 py-1 text-white">
+            <button className="mb-10 w-full bg-green-500 rounded-md px-3 py-2 text-white">
               Login
             </button>
           </Link>
