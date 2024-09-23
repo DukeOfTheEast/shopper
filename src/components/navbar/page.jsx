@@ -72,21 +72,21 @@ const Navbar = () => {
         /> */}
         </div>
       </div>
-      <div className="sm:hidden">
+      <div className="sm:hidden fixed left-0 right-0 top-10 ">
         <div
-          className={`flex flex-col mt-1 transition-all duration-500 ${
+          className={`flex flex-col transition-all duration-500 ${
             toggleMenu
               ? "max-h-[9999px] opacity-100 translate-y-0"
               : "max-h-0 opacity-0 -translate-y-4"
           } absolute mx-auto bg-white w-full p-3 gap-3 shadow-md`}
         >
           <Link href={"/signup"}>
-            <button className="w-full border border-green-500 rounded-md px-3 py-2 text-green-500 sm:mr-2">
+            <button className="w-full mt-5 border border-green-500 rounded-md px-3 py-2 text-green-500 sm:mr-2">
               Signup
             </button>
           </Link>
           <Link href={"/login"}>
-            <button className="mb-10 w-full bg-green-500 rounded-md px-3 py-2 text-white">
+            <button className="mb-5 w-full bg-green-500 rounded-md px-3 py-2 text-white">
               Login
             </button>
           </Link>
