@@ -78,7 +78,7 @@ const Navbar = () => {
           className={`flex flex-col transition-all duration-500 ${
             toggleMenu
               ? "max-h-[9999px] opacity-100 translate-y-0"
-              : "max-h-0 opacity-0 -translate-y-4"
+              : "max-h-0 hidden -translate-y-4"
           } mx-auto bg-white p-3 py-7 gap-4 shadow-md`}
         >
           <Link href={"/signup"}>
