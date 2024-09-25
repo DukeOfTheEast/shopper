@@ -45,7 +45,7 @@ const Signup = () => {
     try {
       await googleSignIn();
       router.push("/products");
-      console.log("User signed in with Google!");
+      console.log("User signed in Google!");
     } catch (error) {
       console.error("Google sign-in failed:", error);
     }
