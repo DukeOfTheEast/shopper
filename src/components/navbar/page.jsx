@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Logo from "@/images/shopper-logo.png";
 import Image from "next/image";
-import Default from "@/images/default-image.png";
+// import Default from "@/images/default-image.png";
 import Cart from "@/images/cart.png";
 import Link from "next/link";
 import { useCart } from "@/context/Cart/page";
