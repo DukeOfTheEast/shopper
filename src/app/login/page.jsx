@@ -1,11 +1,70 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import LoginImage from "@/images/login-img.jpg";
 import Link from "next/link";
 import Google from "@/images/google.png";
 import Facebook from "@/images/facebook.png";
+import { useAuth } from "@/context/Auth/page";
+import { useRouter } from "next/navigation";
+import { CircleLoader, ScaleLoader } from "react-spinners";
 
 const Login = () => {
+  const { login } = useAuth();
+  const { googleSignIn } = useAuth();
+  const { facebookSignIn } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [isLoggingIn, setIsLoggingIn] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const { currentUser } = useAuth();
+  const router = useRouter();
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+
+    if (isLoggingIn) {
+      try {
+        await login(email, password);
+        console.log("user is logged in");
+        if (currentUser) {
+          router.push("/products");
+        }
+        setIsLoading(true);
+      } catch (err) {
+        setError("Incorrect email or password");
+        setTimeout(() => {
+          setError("");
+        }, 3000);
+        setEmail("");
+        setPassword("");
+      }
+      return;
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await googleSignIn();
+      router.push("/products");
+      console.log("User signed in Google!");
+    } catch (error) {
+      console.error("Google sign-in failed:", error);
+    }
+  };
+
+  const handleFacebookSignIn = async () => {
+    try {
+      await facebookSignIn();
+      router.push("/products");
+      console.log("User signed in facebook!");
+    } catch (error) {
+      console.error("facebook sign-in failed:", error);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center sm:p-0 p-3">
       <Image
@@ -27,17 +86,23 @@ const Login = () => {
           Enter your credentials to access your account.
         </p>
         <div className="flex text-xs md:my-2 gap-2 mt-3">
-          <div className="flex border border-gray-300 gap-2 py-3 md:px-6 px-4 rounded-xl cursor-pointer">
+          <div
+            onClick={handleGoogleSignIn}
+            className="flex border border-gray-300 gap-2 py-3 md:px-6 px-4 rounded-xl cursor-pointer"
+          >
             <Image src={Google} width={15} height={15} alt="google" />
             <p>Login with Google</p>
           </div>
-          <div className="flex border border-gray-300 gap-2 py-3 md:px-6 px-4 rounded-xl cursor-pointer">
+          <div
+            onClick={handleFacebookSignIn}
+            className="flex border border-gray-300 gap-2 py-3 md:px-6 px-4 rounded-xl cursor-pointer"
+          >
             <Image src={Facebook} width={15} height={15} alt="facebook" />
             <p>Login with Facebook</p>
           </div>
         </div>
         <p className="text-center md:my-3">or</p>
-        <form className="flex flex-col gap-1">
+        <form onSubmit={handleSignIn} className="flex flex-col gap-1">
           <div>
             <label
               htmlFor="email"
@@ -52,6 +117,8 @@ const Login = () => {
                 type="email"
                 autoComplete="email"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="border border-gray-300 p-2 focus:outline-none focus:border-green-500 rounded-xl w-full"
               />
             </div>
@@ -71,6 +138,8 @@ const Login = () => {
                 type="password"
                 autoComplete="new-password"
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="border border-gray-300 p-2 focus:outline-none focus:border-green-500 rounded-xl w-full"
               />
             </div>
@@ -79,9 +148,15 @@ const Login = () => {
           <div>
             <button
               type="submit"
-              className="w-full bg-green-500 text-white rounded-xl p-2 mt-4"
+              className={`w-full ${
+                isLoading ? "bg-green-100 cursor-not-allowed" : "bg-green-500"
+              }  text-white rounded-xl p-2 mt-4`}
             >
-              Login
+              {isLoading ? (
+                <ScaleLoader color="#22c55e" size={25} height={15} />
+              ) : (
+                "Login"
+              )}
             </button>
           </div>
         </form>

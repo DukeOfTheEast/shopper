@@ -1,23 +1,58 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Logo from "@/images/shopper-logo.png";
 import Image from "next/image";
-// import Default from "@/images/default-image.png";
+import Default from "@/images/default-image.png";
 import Cart from "@/images/cart.png";
 import Link from "next/link";
 import { useCart } from "@/context/Cart/page";
 import {
   Delete,
   DeleteIcon,
+  LogOut,
   MenuIcon,
   RemoveFormatting,
   X,
 } from "lucide-react";
+import { useAuth } from "@/context/Auth/page";
+import { useRouter } from "next/navigation";
+import UserProfile from "@/app/userProfile/page";
+import { useProfile } from "@/context/Profile/page";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/app/firebase/config";
 
 const Navbar = () => {
   const { cartCount } = useCart();
   const [toggleMenu, setToggleMenu] = useState(false);
+  const { currentUser, logout } = useAuth();
+  const router = useRouter();
+  const { photoURL, setPhotoURL } = useProfile();
+
+  useEffect(() => {
+    const fetchProfileImage = async () => {
+      if (currentUser) {
+        const docRef = doc(db, "users", currentUser.uid);
+        const docSnap = await getDoc(docRef);
+        const userData = docSnap.data();
+
+        if (docSnap.exists()) {
+          setPhotoURL(userData?.photoURL);
+        }
+      }
+    };
+
+    fetchProfileImage();
+  }, [currentUser, setPhotoURL]);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push("/products");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   const handleToggle = () => {
     setToggleMenu(!toggleMenu);
@@ -33,30 +68,47 @@ const Navbar = () => {
           <span>pper</span>
         </div>
         <div className="flex items-center gap-3">
-          <div className=" hidden sm:block">
-            <Link href={"/signup"}>
-              <button className="border border-green-500 rounded-md px-3 py-1 text-green-500 sm:mr-2">
-                Signup
-              </button>
-            </Link>
-            <Link href={"/login"}>
-              <button className="bg-green-500 rounded-md px-3 py-1 text-white">
-                Login
-              </button>
-            </Link>
-          </div>
+          {!currentUser ? (
+            <div className=" hidden sm:block">
+              <Link href={"/signup"}>
+                <button className="border border-green-500 rounded-md px-3 py-1 text-green-500 sm:mr-2">
+                  Signup
+                </button>
+              </Link>
+              <Link href={"/login"}>
+                <button className="bg-green-500 rounded-md px-3 py-1 text-white">
+                  Login
+                </button>
+              </Link>
+            </div>
+          ) : (
+            <div></div>
+          )}
           <Link href={"/cart"} className="relative">
             <Image
               src={Cart}
               width={50}
               height={50}
-              alt="default"
-              className="sm:w-8 w-6 sm:h-8 h-6"
+              alt="cart"
+              className="w-6 h-6"
             />
-            <p className="bg-red-600 text-white px-1 absolute sm:ml-5 ml-3 sm:bottom-4 bottom-3 rounded-lg">
+            <p className="bg-red-600 text-white px-1 absolute sm:ml-3 ml-3 sm:bottom-3 bottom-3 rounded-lg">
               {cartCount}
             </p>
           </Link>
+          {currentUser ? (
+            <Link href={"/userProfile"}>
+              <Image
+                src={photoURL}
+                width={50}
+                height={50}
+                alt="default"
+                className="sm:w-7 w-6 sm:h-7 h-6 rounded-full"
+              />
+            </Link>
+          ) : (
+            <div className="hidden"></div>
+          )}
           <div className="sm:hidden cursor-pointer">
             {toggleMenu ? (
               <X onClick={handleToggle} size={30} />
@@ -64,15 +116,10 @@ const Navbar = () => {
               <MenuIcon onClick={handleToggle} size={30} />
             )}
           </div>
-          {/* <Image
-          src={Default}
-          width={50}
-          height={50}
-          alt="default"
-          className="sm:w-8 w-6 sm:h-8 h-6"
-        /> */}
         </div>
       </div>
+
+      {/*menu small screen*/}
       <div className="sm:hidden fixed w-full top-12">
         <div
           className={`flex flex-col transition-all duration-500 ${
@@ -81,16 +128,33 @@ const Navbar = () => {
               : "max-h-0 hidden -translate-y-4"
           } mx-auto bg-white p-3 py-7 gap-4 shadow-md`}
         >
-          <Link href={"/signup"}>
-            <button className="w-full mt-5 border border-green-500 rounded-md px-3 py-2 text-green-500 sm:mr-2">
-              Signup
-            </button>
-          </Link>
-          <Link href={"/login"}>
-            <button className="mb-5 w-full bg-green-500 rounded-md px-3 py-2 text-white">
-              Login
-            </button>
-          </Link>
+          {currentUser ? (
+            <div>
+              <Link href={"/profile"}>
+                <p className="my-3 text-green-500">Profile</p>
+              </Link>
+              <div
+                onClick={handleLogout}
+                className="flex items-center justify-center gap-2 border border-green-500 text-green-500 rounded-md p-2"
+              >
+                <LogOut size={20} />
+                <p>Logout</p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3">
+              <Link href={"/signup"}>
+                <button className="w-full mt-5 border border-green-500 rounded-md px-3 py-2 text-green-500 sm:mr-2">
+                  Signup
+                </button>
+              </Link>
+              <Link href={"/login"}>
+                <button className="mb-2 w-full bg-green-500 rounded-md px-3 py-2 text-white">
+                  Login
+                </button>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>

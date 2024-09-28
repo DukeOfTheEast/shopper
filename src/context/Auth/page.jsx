@@ -1,16 +1,19 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { auth, db } from "@/app/firebase/config";
+import { auth, db, storage } from "@/app/firebase/config";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
   GoogleAuthProvider,
+  FacebookAuthProvider,
   signInWithPopup,
+  updateProfile,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const AuthContext = createContext();
 
@@ -94,6 +97,7 @@ export const AuthProvider = ({ children }) => {
           uid: user.uid,
           email: user.email,
           fullName: user.displayName || "No Name",
+          photoURL: user.photoURL,
           createdAt: new Date(),
         });
       }
@@ -103,6 +107,7 @@ export const AuthProvider = ({ children }) => {
         uid: user.uid,
         email: user.email,
         fullName: user.displayName || "No Name",
+        photoURL: user.photoURL,
       });
 
       return user;
@@ -112,11 +117,51 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const facebookSignIn = async () => {
+    const provider = new FacebookAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Fetch additional user details if needed
+      const userDoc = doc(db, "users", user.uid);
+      const userSnapshot = await getDoc(userDoc);
+      if (!userSnapshot.exists()) {
+        await setDoc(userDoc, {
+          uid: user.uid,
+          email: user.email,
+          fullName: user.displayName,
+          photoURL: user.photoURL,
+          createdAt: new Date(),
+        });
+      }
+
+      setCurrentUser({
+        uid: user.uid,
+        email: user.email,
+        fullName: user.displayName,
+        photoURL: user.photoURL,
+      });
+
+      return user;
+    } catch (error) {
+      console.error("Error during Facebook login:", error);
+      throw error;
+    }
+  };
+
   const logout = () => signOut(auth);
 
   return (
     <AuthContext.Provider
-      value={{ currentUser, signup, login, googleSignIn, logout }}
+      value={{
+        currentUser,
+        signup,
+        login,
+        googleSignIn,
+        facebookSignIn,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

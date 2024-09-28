@@ -13,6 +13,7 @@ import { useState } from "react";
 const Signup = () => {
   const { signup } = useAuth();
   const { googleSignIn } = useAuth();
+  const { facebookSignIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -51,6 +52,16 @@ const Signup = () => {
     }
   };
 
+  const handleFacebookSignIn = async () => {
+    try {
+      await facebookSignIn();
+      router.push("/products");
+      console.log("User signed in with facebook!");
+    } catch (error) {
+      console.error("facebook sign-in failed:", error);
+    }
+  };
+
   return (
     <div className="flex sm:p-0 p-3">
       <Image
@@ -79,7 +90,10 @@ const Signup = () => {
             <Image src={Google} width={15} height={15} alt="google" />
             <p>Login with Google</p>
           </div>
-          <div className="flex border border-gray-300 gap-2 py-3 md:px-6 px-4 rounded-xl cursor-pointer">
+          <div
+            onClick={handleFacebookSignIn}
+            className="flex border border-gray-300 gap-2 py-3 md:px-6 px-4 rounded-xl cursor-pointer"
+          >
             <Image src={Facebook} width={15} height={15} alt="facebook" />
             <p>Login with Facebook</p>
           </div>

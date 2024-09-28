@@ -15,7 +15,8 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [cartCount, setCartCount] = useState(0);
 
-  const count = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  // const count = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  // const count = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   // Add an item to the cart
   const addToCart = (product) => {
@@ -28,6 +29,7 @@ export const CartProvider = ({ children }) => {
             : item
         );
       } else {
+        setCartCount(cartCount + 1);
         return [
           ...prevItems,
           {
@@ -40,8 +42,6 @@ export const CartProvider = ({ children }) => {
         ];
       }
     });
-
-    setCartCount(count);
   };
 
   // Remove a specific item from the cart
@@ -50,9 +50,8 @@ export const CartProvider = ({ children }) => {
       prevItems.filter((item) => item.id !== productId)
     );
 
-    setCartCount(count);
+    setCartCount(cartCount - 1);
   };
-
   // Clear all items from the cart
   // const clearCart = () => {
   //   setCartItems([]);
