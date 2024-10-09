@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useAuth } from "@/context/Auth/page";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { CircleLoader, ScaleLoader } from "react-spinners";
 
 const Signup = () => {
   const { signup } = useAuth();
@@ -21,6 +22,7 @@ const Signup = () => {
   const [error, setError] = useState(null);
   const router = useRouter();
   const [isChecked, setIsChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
@@ -31,7 +33,9 @@ const Signup = () => {
     setError("");
     try {
       await signup(email, password, fullName);
+
       router.push("/login");
+      setIsLoading(true);
     } catch (error) {
       setError(error.message);
       setTimeout(() => {
@@ -85,14 +89,14 @@ const Signup = () => {
         <div className="flex text-xs md:my-2 gap-2 mt-3">
           <div
             onClick={handleGoogleSignIn}
-            className="flex border border-gray-300 gap-2 py-3 md:px-6 px-4 rounded-xl cursor-pointer"
+            className="flex border sm:w-1/2 border-gray-300 gap-2 py-3 md:px-6 px-4 rounded-xl cursor-pointer"
           >
             <Image src={Google} width={15} height={15} alt="google" />
             <p>Login with Google</p>
           </div>
           <div
             onClick={handleFacebookSignIn}
-            className="flex border border-gray-300 gap-2 py-3 md:px-6 px-4 rounded-xl cursor-pointer"
+            className="flex border sm:w-1/2 border-gray-300 gap-2 py-3 md:px-6 px-4 rounded-xl cursor-pointer"
           >
             <Image src={Facebook} width={15} height={15} alt="facebook" />
             <p>Login with Facebook</p>
@@ -206,7 +210,11 @@ const Signup = () => {
                 isChecked ? "bg-green-500" : "bg-green-200 cursor-not-allowed"
               } w-full  text-white rounded-xl p-2`}
             >
-              Sign up
+              {isLoading ? (
+                <ScaleLoader color="white" size={25} height={15} />
+              ) : (
+                "Sign Up"
+              )}
             </button>
           </div>
         </form>

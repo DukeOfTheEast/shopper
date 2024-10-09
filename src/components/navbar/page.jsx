@@ -28,6 +28,7 @@ const Navbar = () => {
   const { currentUser, logout } = useAuth();
   const router = useRouter();
   const { photoURL, setPhotoURL } = useProfile();
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const fetchProfileImage = async () => {
@@ -97,15 +98,34 @@ const Navbar = () => {
             </p>
           </Link>
           {currentUser ? (
-            <Link href={"/userProfile"}>
-              <Image
-                src={photoURL}
-                width={50}
-                height={50}
-                alt="default"
-                className="sm:w-7 w-6 sm:h-7 h-6 rounded-full"
-              />
-            </Link>
+            <div>
+              <Link href={"/userProfile"}>
+                <Image
+                  src={photoURL}
+                  width={50}
+                  height={50}
+                  alt="default"
+                  className="sm:w-7 w-6 sm:h-7 h-6 rounded-full"
+                  onMouseOver={() => setIsHovered(true)}
+                  onMouseOut={() => setIsHovered(false)}
+                />
+              </Link>
+              {isHovered && (
+                <div
+                  className=" absolute right-10 mb-2 w-48 p-2 pr-2 border border-green-500 bg-white rounded-s-2xl shadow-xl text-green-500"
+                  onMouseOver={() => setIsHovered(true)}
+                  onMouseOut={() => setIsHovered(false)}
+                >
+                  <Link href="/userProfile">
+                    <p>Profile</p>
+                  </Link>
+                  <button onClick={handleLogout} className="flex gap-1 mt-3">
+                    <LogOut size={20} />
+                    <p>Logout</p>
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <div className="hidden"></div>
           )}
@@ -130,7 +150,7 @@ const Navbar = () => {
         >
           {currentUser ? (
             <div>
-              <Link href={"/profile"}>
+              <Link href={"/userProfile"}>
                 <p className="my-3 text-green-500">Profile</p>
               </Link>
               <div

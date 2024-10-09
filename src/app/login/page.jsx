@@ -88,14 +88,14 @@ const Login = () => {
         <div className="flex text-xs md:my-2 gap-2 mt-3">
           <div
             onClick={handleGoogleSignIn}
-            className="flex border border-gray-300 gap-2 py-3 md:px-6 px-4 rounded-xl cursor-pointer"
+            className="flex border sm:w-1/2 border-gray-300 gap-2 py-3 md:px-6 px-4 rounded-xl cursor-pointer"
           >
             <Image src={Google} width={15} height={15} alt="google" />
             <p>Login with Google</p>
           </div>
           <div
             onClick={handleFacebookSignIn}
-            className="flex border border-gray-300 gap-2 py-3 md:px-6 px-4 rounded-xl cursor-pointer"
+            className="flex border sm:w-1/2 border-gray-300 gap-2 py-3 md:px-6 px-4 rounded-xl cursor-pointer"
           >
             <Image src={Facebook} width={15} height={15} alt="facebook" />
             <p>Login with Facebook</p>
