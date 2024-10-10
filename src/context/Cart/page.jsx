@@ -1,6 +1,8 @@
 "use client";
 
 import React, { createContext, useState, useContext, useEffect } from "react";
+import { useAuth } from "../Auth/page";
+import { useRouter } from "next/navigation";
 
 // Create the Cart Context
 const CartContext = createContext();
@@ -14,6 +16,8 @@ export const useCart = () => {
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [cartCount, setCartCount] = useState(0);
+  const { currentUser } = useAuth();
+  const router = useRouter();
 
   // const count = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   // const count = cartItems.reduce((acc, item) => acc + item.quantity, 0);

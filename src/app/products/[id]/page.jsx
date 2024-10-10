@@ -12,6 +12,8 @@ import LoadingSpinner from "@/components/loadingSpinner/page";
 import Navbar from "@/components/navbar/page";
 import { useCart } from "@/context/Cart/page";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/Auth/page";
+import Link from "next/link";
 
 export default function ProductDetail() {
   const { addToCart } = useCart();
@@ -21,7 +23,8 @@ export default function ProductDetail() {
   const [orderCount, setOrderCount] = useState(1);
   const [toggleReview, setToggleReview] = useState(true);
   const router = useRouter();
-  // const { setCartState, cartState } = useCartState();
+  const { currentUser } = useAuth();
+  const [forceUser, setForceUser] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -136,7 +139,13 @@ export default function ProductDetail() {
             <hr className="w-full" />
             <div className="flex items-center mx-auto sm:mx-1 gap-2">
               <button
-                onClick={() => addToCart(product)}
+                onClick={() => {
+                  if (currentUser) {
+                    addToCart(product);
+                  } else {
+                    setForceUser(true);
+                  }
+                }}
                 className="mt-5 border border-yellow-400 bg-yellow-400 flex items-center gap-2 rounded-xl text-xs p-2 px-5 font-semibold"
               >
                 <MdAddShoppingCart size={25} />
@@ -236,6 +245,34 @@ export default function ProductDetail() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        className={`fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50 ${
+          forceUser ? "" : "hidden"
+        }`}
+      >
+        <div className="bg-white rounded-lg shadow-lg text-center p-3 mx-5 sm:mx-1 sm:py-5">
+          <div className="text-sm">
+            <p>User is not logged in!!!</p>
+            <p>
+              To continue shopping, login to your account or create an account
+              by clicking the signup button
+            </p>
+          </div>
+          <div className="flex gap-3 items-center justify-center mt-4">
+            <Link href={"/signup"}>
+              <button className="border border-green-500 rounded-md px-3 py-1 text-green-500">
+                Sign Up
+              </button>
+            </Link>
+            <Link href={"/login"}>
+              <button className="bg-green-500 rounded-md px-4 py-1 text-white">
+                Login
+              </button>
+            </Link>
           </div>
         </div>
       </div>
