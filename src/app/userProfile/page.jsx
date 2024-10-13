@@ -98,7 +98,7 @@ const UserProfile = () => {
 
             <label
               htmlFor="file-input"
-              className="cursor-pointer block bg-green-500 text-white px-5 py-2 rounded-xl gap-2 flex"
+              className="cursor-pointer bg-green-500 text-white px-5 py-2 rounded-xl gap-2 flex"
             >
               <UploadIcon size={25} />
               <p>Upload</p>
@@ -116,7 +116,7 @@ const UserProfile = () => {
           )}
         </div>
         <div className="mb-2">
-          <p>Name: {currentUser.fullName}</p>
+          <p>Name: {currentUser?.fullName}</p>
           <p>Email: {currentUser.email}</p>
         </div>
       </div>
