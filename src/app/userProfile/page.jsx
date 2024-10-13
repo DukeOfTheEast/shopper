@@ -117,7 +117,7 @@ const UserProfile = () => {
         </div>
         <div className="mb-2">
           <p>Name: {currentUser?.fullName}</p>
-          <p>Email: {currentUser.email}</p>
+          <p>Email: {currentUser?.email}</p>
         </div>
       </div>
 
