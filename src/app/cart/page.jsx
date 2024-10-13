@@ -18,6 +18,11 @@ import Visa from "@/images/visa.png";
 import Navbar from "@/components/navbar/page";
 import { useCart } from "@/context/Cart/page";
 import CartImg from "@/images/cart-checkout.png";
+import { v4 as uuidv4 } from "uuid";
+import { useAuth } from "@/context/Auth/page";
+import { db } from "../firebase/config";
+import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 const StepProgressBar = ({ currentStep }) => {
   const steps = ["Cart", "Billing", "Payment"];
@@ -54,6 +59,8 @@ const StepProgressBar = ({ currentStep }) => {
 };
 
 const CartCheckout = () => {
+  const { currentUser } = useAuth();
+  const router = useRouter();
   const { cartItems, removeFromCart, clearCart, cartCount } = useCart();
   const [activeDelivery, setActiveDelivery] = useState(null);
   const [activePayment, setActivePayment] = useState(null);
@@ -71,8 +78,44 @@ const CartCheckout = () => {
     0
   );
 
-  const handleProceed = () => {
-    if (step < 3) setStep(step + 1);
+  const handleProceed = async () => {
+    if (step < 3) {
+      setStep(step + 1);
+    } else if (step === 3) {
+      try {
+        // Create the order object
+        const orderData = {
+          orderId: uuidv4(),
+          items: cartItems,
+          totalAmount: totalPrice + (activeDelivery === 2 ? 3000 : 0),
+          timestamp: new Date().toISOString(),
+          billingInfo: billingInfo,
+          deliveryOption: activeDelivery === 1 ? "Standard" : "Fast",
+          paymentOption:
+            activePayment === 1
+              ? "PayPal"
+              : activePayment === 2
+              ? "Credit/Debit Card"
+              : "Cash on Delivery",
+        };
+
+        // Reference to the user's document in Firestore
+        const userRef = doc(db, "users", currentUser.uid);
+
+        // Save the order to Firestore
+        await updateDoc(userRef, {
+          orderHistory: arrayUnion(orderData),
+        });
+
+        // Redirect to the success page
+        router.push("/cart/checkoutSuccess");
+      } catch (error) {
+        console.error("Error saving order to history:", error);
+        alert(
+          "An error occurred while processing your order. Please try again."
+        );
+      }
+    }
   };
 
   const handleBack = () => {
@@ -430,14 +473,13 @@ const CartCheckout = () => {
                     </p>
                   </div>
                 </div>
-                <Link href={"/cart/checkoutSuccess"}>
-                  <button
-                    onClick={handleProceed}
-                    className="bg-green-500 rounded-md text-white w-[300px] py-2 "
-                  >
-                    Checkout
-                  </button>
-                </Link>
+
+                <button
+                  onClick={handleProceed}
+                  className="bg-green-500 rounded-md text-white w-[300px] py-2 "
+                >
+                  Checkout
+                </button>
               </div>
               {/* <h2 className="text-xl font-bold mb-2">Payment</h2>
           <p>Total to pay: ${totalPrice.toFixed(2)}</p>

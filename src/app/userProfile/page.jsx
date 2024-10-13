@@ -14,6 +14,32 @@ import Navbar from "@/components/navbar/page";
 const UserProfile = () => {
   const { currentUser } = useAuth();
   const { photoURL, setPhotoURL } = useProfile();
+  const [orderHistory, setOrderHistory] = useState([]);
+  const [loading, setLoading] = useState();
+
+  useEffect(() => {
+    const fetchOrderHistory = async () => {
+      if (!currentUser) return;
+
+      try {
+        const userRef = doc(db, "users", currentUser.uid); // Reference to the user's Firestore document
+        const docSnap = await getDoc(userRef); // Fetch the document
+
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          let history = userData.orderHistory || [];
+          history = history.sort((a, b) => b.timestamp - a.timestamp);
+          setOrderHistory(history); // Get the orderHistory array
+        }
+      } catch (error) {
+        console.error("Error fetching order history:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrderHistory();
+  }, [currentUser, setOrderHistory]);
 
   useEffect(() => {
     const fetchProfileImage = async () => {
@@ -116,8 +142,12 @@ const UserProfile = () => {
           )}
         </div>
         <div className="mb-2">
-          <p>Name: {currentUser?.fullName}</p>
-          <p>Email: {currentUser?.email}</p>
+          <p>
+            Name: <span className="font-bold">{currentUser?.fullName}</span>
+          </p>
+          <p>
+            Email: <span className="font-bold">{currentUser?.email}</span>
+          </p>
         </div>
       </div>
 
@@ -125,9 +155,40 @@ const UserProfile = () => {
       <hr className="w-3/4 mx-auto" />
       <div className="mx-4 my-6">
         <h1 className="font-bold text-green-500">History</h1>
-        <div className="flex items-center justify-center italic">
-          <p>No activities yet</p>
-        </div>
+
+        {orderHistory.length > 0 ? (
+          orderHistory.map((order, index) => (
+            <div key={index} className="mb-4 p-4 rounded">
+              <h3 className="text-xl font-semibold mb-2">Order #{index + 1}</h3>
+              <p>Date: {new Date(order.timestamp).toLocaleString()}</p>
+              <ul className="mt-3">
+                {order.items.map((item, i) => (
+                  <li
+                    key={i}
+                    className="mb-2 flex items-center gap-3 text-sm sm:text-base"
+                  >
+                    <Image
+                      className="w-8 h-8"
+                      src={item.image}
+                      alt="item"
+                      width={300}
+                      height={300}
+                    />
+                    <p>{item.name}</p>
+                    <p className="hidden sm:block">(x{item.quantity})</p>
+                    <p className="hidden sm:block">- &#8358;{item.price}</p>
+                  </li>
+                ))}
+              </ul>
+              <p className="font-bold mt-2">Total: &#8358;{}</p>
+              <hr className="w-full" />
+            </div>
+          ))
+        ) : (
+          <p className="flex items-center justify-center italic">
+            You have no order history.
+          </p>
+        )}
       </div>
     </div>
   );
